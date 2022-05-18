@@ -33,7 +33,10 @@ def return_ranked_meals():
     """
     Get the client's choice and the meals dataframe, scales the df and
     """
-
+    dict_of_restaurants = request.get_json()['restaurants']
+    # choose only the nearby resturant from database
+    df = df_origin[df_origin.brand_name.apply(lambda x: x in dict_of_restaurants.values())]
+    df.reset_index(drop=True, inplace=True)
     dict_of_nutrients = request.get_json()['input']
     # SCALING of df
     dg = df[dict_of_nutrients.keys()]
