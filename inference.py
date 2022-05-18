@@ -16,17 +16,18 @@ app = Flask(__name__)
 @app.route('/predict_churn_bulk', methods=['POST'])
 def predict_churn_bulk():
     data = json.loads(request.get_json())
-    X_test = pd.DataFrame.from_dict(data)
-
-    y_pred_calc = loaded_model.predict(X_test)
-    response_body = []
-    for i in range(len(y_pred_calc)):
-        dict = {
-            "input": X_test.iloc[i].to_dict(),
-            "prediction": str(y_pred_calc[i])
-        }
-        response_body.append(dict)
-    return jsonify(response_body)
+    # X_test = pd.DataFrame.from_dict(data)
+    #
+    # y_pred_calc = loaded_model.predict(X_test)
+    # response_body = []
+    # for i in range(len(y_pred_calc)):
+    #     dict = {
+    #         "input": X_test.iloc[i].to_dict(),
+    #         "prediction": str(y_pred_calc[i])
+    #     }
+    #     response_body.append(dict)
+    # return jsonify(response_body)
+    return data
 
 
 if __name__ == '__main__':

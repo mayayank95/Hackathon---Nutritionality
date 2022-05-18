@@ -1,0 +1,5 @@
+Flask==2.1.2
+numpy==1.22.2
+pandas==1.4.1
+pandas-addons==0.1.0
+sklearn==1.0.2
