@@ -15,8 +15,7 @@ app = Flask(__name__)
 # part F
 @app.route('/predict_churn_bulk', methods=['POST'])
 def predict_churn_bulk():
-    data = json.loads(request.get_json())
-#     data = json.loads(json.dumps(request))
+    print(request.get_json(), type(request.get_json()),request.data)
     # X_test = pd.DataFrame.from_dict(data)
     #
     # y_pred_calc = loaded_model.predict(X_test)
@@ -28,11 +27,13 @@ def predict_churn_bulk():
     #     }
     #     response_body.append(dict)
     # return jsonify(response_body)
-    return jsonify(data)
+    return 'yes'
 
 
 if __name__ == '__main__':
-#     with open('churn_model.pkl', 'rb') as file:
-#         loaded_model = pickle.load(file)
+    # with open('churn_model.pkl', 'rb') as file:
+    #     loaded_model = pickle.load(file)
     app.run(host='0.0.0.0', port=8080)
+
+
 
