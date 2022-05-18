@@ -42,7 +42,7 @@ def return_ranked_meals():
     st.fit(dg)
     dg = pd.DataFrame(st.transform(dg), columns=dg.columns)
 
-    client_vals = np.array(list(dict_of_nutrients.values())).reshape(1, -1)
+    client_vals = np.array(dict_of_nutrients.values()).reshape(1, -1)
     client_vals = st.transform(client_vals)
 
     ind = df.index[euclidean_distances(client_vals, dg).argsort()[0]]
