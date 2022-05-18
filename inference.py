@@ -11,23 +11,36 @@ from flask import jsonify
 
 app = Flask(__name__)
 
+def sorted_df_to_json(sorted_df):
+    final_dict = {}
+    for i in range(sorted_df.shape[0]):
+        final_dict[i] = {}
+        final_dict[i]['brand_name'] = sorted_df['brand_name'][i]
+        final_dict[i]['item_name'] = sorted_df['item_name'][i]
+
+    return final_dict
 
 # part F
-@app.route('/predict_churn_bulk', methods=['POST'])
-def predict_churn_bulk():
-    print(request.get_json(), type(request.get_json()),request.data)
-    # X_test = pd.DataFrame.from_dict(data)
-    #
-    # y_pred_calc = loaded_model.predict(X_test)
-    # response_body = []
-    # for i in range(len(y_pred_calc)):
-    #     dict = {
-    #         "input": X_test.iloc[i].to_dict(),
-    #         "prediction": str(y_pred_calc[i])
-    #     }
-    #     response_body.append(dict)
-    # return jsonify(response_body)
-    return 'yes'
+@app.route('/predict', methods=['POST'])
+def return_ranked_meals():
+    """
+    Get the client's choice and the meals dataframe, scales the df and
+    """
+
+    dict_of_nutrients = request.get_json()['input']
+    # SCALING of df
+    dg = df[list(dict_of_nutrients.keys())]
+    st = StandardScaler()
+    # dg = df.drop('brand_name', axis=1)
+    st.fit(dg)
+    dg = pd.DataFrame(st.transform(dg), columns=dg.columns)
+
+    client_vals = np.array(list(dict_of_nutrients.values())).reshape(1, -1)
+    client_vals = st.transform(client_vals)
+
+    ind = df.index[euclidean_distances(client_vals, dg).argsort()[0]]
+    sorted_meals = df.loc[ind]
+    return sorted_df_to_json(sorted_meals) 
 
 
 if __name__ == '__main__':
