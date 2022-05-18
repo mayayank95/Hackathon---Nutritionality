@@ -55,6 +55,6 @@ def return_ranked_meals():
 if __name__ == '__main__':
     # with open('churn_model.pkl', 'rb') as file:
     #     loaded_model = pickle.load(file)
-    df = pd.read_csv("CLEANED_DATAFRAME.csv")
+    df_origin = pd.read_csv("CLEANED_DATAFRAME.csv")
     app.run(host='0.0.0.0', port=8080)
 
