@@ -27,7 +27,7 @@ def predict_churn_bulk():
     #     }
     #     response_body.append(dict)
     # return jsonify(response_body)
-    return [data]
+    return jsonify(data)
 
 
 if __name__ == '__main__':
