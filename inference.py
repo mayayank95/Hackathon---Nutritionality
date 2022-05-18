@@ -22,32 +22,32 @@ def sorted_df_to_json(sorted_df):
     return final_dict
 
 # part F
-# @app.route('/best', methods=['POST'])
-# def predict_churn_bulk():
-#     #print(request.get_json(), type(request.get_json()),request.data)
-#     dict = request.get_json()
-#     return dict['input']#request.get_json()
+@app.route('/best', methods=['POST'])
+def predict_churn_bulk():
+    #print(request.get_json(), type(request.get_json()),request.data)
+    dict = request.get_json()
+    return dict['input']#request.get_json()
 
 @app.route('/predict', methods=['POST'])
-def return_ranked_meals():
-    """
-    Get the client's choice and the meals dataframe, scales the df and
-    """
+# def return_ranked_meals():
+#     """
+#     Get the client's choice and the meals dataframe, scales the df and
+#     """
 
-    dict_of_nutrients = request.get_json()['input']
-    # SCALING of df
-    dg = df[list(dict_of_nutrients.keys())]
-    st = StandardScaler()
-    # dg = df.drop('brand_name', axis=1)
-    st.fit(dg)
-    dg = pd.DataFrame(st.transform(dg), columns=dg.columns)
+#     dict_of_nutrients = request.get_json()['input']
+#     # SCALING of df
+#     dg = df[list(dict_of_nutrients.keys())]
+#     st = StandardScaler()
+#     # dg = df.drop('brand_name', axis=1)
+#     st.fit(dg)
+#     dg = pd.DataFrame(st.transform(dg), columns=dg.columns)
 
-    client_vals = np.array(list(dict_of_nutrients.values())).reshape(1, -1)
-    client_vals = st.transform(client_vals)
+#     client_vals = np.array(list(dict_of_nutrients.values())).reshape(1, -1)
+#     client_vals = st.transform(client_vals)
 
-    ind = df.index[euclidean_distances(client_vals, dg).argsort()[0]]
-    sorted_meals = df.loc[ind]
-    return sorted_df_to_json(sorted_meals) #.reset_index().iloc[:, :2]
+#     ind = df.index[euclidean_distances(client_vals, dg).argsort()[0]]
+#     sorted_meals = df.loc[ind]
+#     return sorted_df_to_json(sorted_meals) #.reset_index().iloc[:, :2]
 
 if __name__ == '__main__':
     # with open('churn_model.pkl', 'rb') as file:
