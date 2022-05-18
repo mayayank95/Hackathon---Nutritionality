@@ -28,7 +28,7 @@ def predict_churn_bulk():
     dict = request.get_json()
     return dict['input']#request.get_json()
 
-@app.route('/predict', methods=['POST'])
+# @app.route('/predict', methods=['POST'])
 # def return_ranked_meals():
 #     """
 #     Get the client's choice and the meals dataframe, scales the df and
