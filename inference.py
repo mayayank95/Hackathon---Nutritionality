@@ -5,7 +5,8 @@ from flask import Flask
 from flask import request
 import json
 from flask import jsonify
-
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics.pairwise import euclidean_distances
 
 # q4
 
@@ -21,6 +22,12 @@ def sorted_df_to_json(sorted_df):
     return final_dict
 
 # part F
+# @app.route('/best', methods=['POST'])
+# def predict_churn_bulk():
+#     #print(request.get_json(), type(request.get_json()),request.data)
+#     dict = request.get_json()
+#     return dict['input']#request.get_json()
+
 @app.route('/predict', methods=['POST'])
 def return_ranked_meals():
     """
@@ -40,13 +47,11 @@ def return_ranked_meals():
 
     ind = df.index[euclidean_distances(client_vals, dg).argsort()[0]]
     sorted_meals = df.loc[ind]
-    return sorted_df_to_json(sorted_meals) 
-
+    return sorted_df_to_json(sorted_meals) #.reset_index().iloc[:, :2]
 
 if __name__ == '__main__':
     # with open('churn_model.pkl', 'rb') as file:
     #     loaded_model = pickle.load(file)
+    df = pd.read_csv("CLEANED_DATAFRAME.csv")
     app.run(host='0.0.0.0', port=8080)
-
-
 
