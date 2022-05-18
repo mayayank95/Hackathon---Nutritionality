@@ -22,11 +22,11 @@ def sorted_df_to_json(sorted_df):
     return final_dict
 
 # part F
-# @app.route('/best', methods=['POST'])
-# def predict_churn_bulk():
-#     #print(request.get_json(), type(request.get_json()),request.data)
-#     dict = request.get_json()
-#     return dict['input']#request.get_json()
+@app.route('/best', methods=['POST'])
+def predict_churn_bulk():
+    #print(request.get_json(), type(request.get_json()),request.data)
+    dict = request.get_json()
+    return dict['input']#request.get_json()
 
 @app.route('/predict', methods=['POST'])
 def return_ranked_meals():
