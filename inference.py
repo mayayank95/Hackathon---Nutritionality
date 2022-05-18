@@ -15,6 +15,7 @@ app = Flask(__name__)
 # part F
 @app.route('/predict_churn_bulk', methods=['POST'])
 def predict_churn_bulk():
+    print(request)
     data = json.loads(request.get_json())
     # X_test = pd.DataFrame.from_dict(data)
     #
