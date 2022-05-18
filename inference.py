@@ -31,7 +31,7 @@ def predict_churn_bulk():
 
 
 if __name__ == '__main__':
-    with open('churn_model.pkl', 'rb') as file:
-        loaded_model = pickle.load(file)
+#     with open('churn_model.pkl', 'rb') as file:
+#         loaded_model = pickle.load(file)
     app.run(host='0.0.0.0', port=8080)
 
