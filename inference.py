@@ -36,7 +36,7 @@ def return_ranked_meals():
 
     dict_of_nutrients = request.get_json()['input']
     # SCALING of df
-    dg = df[list(dict_of_nutrients.keys())]
+    dg = df[dict_of_nutrients.keys()]
     st = StandardScaler()
     # dg = df.drop('brand_name', axis=1)
     st.fit(dg)
