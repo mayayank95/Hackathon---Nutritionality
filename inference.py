@@ -97,6 +97,32 @@ def return_ranked_meals_db():
     sorted_meals = df.loc[ind]
     return sorted_df_to_json_db(sorted_meals.iloc[:, :2]) #.reset_index().iloc[:, :2]
 
+@app.route('/predict_db_location', methods=['POST'])
+def return_ranked_meals_db_location():
+    """
+    Get the client's choice and the meals dataframe, scales the df and
+    """
+    dict_of_location = request.get_json()['location']
+    sql = f"select * from Dish_Nutritional_values where ((Latitude-{dict_of_location['Latitude']})*(Latitude-{dict_of_location['Latitude']})+(Longitude-{dict_of_location['Longitude']})*(Longitude-{dict_of_location['Longitude']}))<({dict_of_location['Radius']}*{dict_of_location['Radius']})"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    df=pd.DataFrame(result).iloc[:, 1:]
+    # df.reset_index(drop=True, inplace=True)
+    dict_of_nutrients = request.get_json()['input']
+    # SCALING of df
+    dg = df[dict_of_nutrients.keys()]
+    st = StandardScaler()
+    # dg = df.drop('brand_name', axis=1)
+    st.fit(dg)
+    dg = pd.DataFrame(st.transform(dg), columns=dg.columns)
+
+    client_vals = np.array(list(dict_of_nutrients.values())).reshape(1, -1)
+    client_vals = st.transform(client_vals)
+
+    ind = df.index[euclidean_distances(client_vals, dg).argsort()[0]]
+    sorted_meals = df.loc[ind]
+    return sorted_df_to_json_db(sorted_meals.iloc[:, :2]) 
+
 if __name__ == '__main__':
     # with open('churn_model.pkl', 'rb') as file:
     #     loaded_model = pickle.load(file)
