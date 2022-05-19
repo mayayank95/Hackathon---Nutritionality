@@ -39,6 +39,18 @@ def sorted_df_to_json_db(sorted_df):
 
     return final_dict
 
+def sorted_df_to_json_db_score(sorted_df):
+    final_dict = {}
+    for i in range(sorted_df.shape[0]):
+        # print(i)
+        final_dict[i] = {}
+        final_dict[i]['Restaurant_name'] = sorted_df['Restaurant_name'].iloc[i]
+        final_dict[i]['name'] = sorted_df['name'].iloc[i]
+        final_dict[i]['scores'] = sorted_df['scores'].iloc[i]
+        final_dict[i]['distance'] = sorted_df['distance'].iloc[i]
+
+    return final_dict
+
 # part F
 @app.route('/best', methods=['POST'])
 def predict_churn_bulk():
@@ -122,6 +134,40 @@ def return_ranked_meals_db_location():
     ind = df.index[euclidean_distances(client_vals, dg).argsort()[0]]
     sorted_meals = df.loc[ind]
     return sorted_df_to_json_db(sorted_meals.iloc[:, :2]) 
+
+@app.route('/predict_db_location_score', methods=['POST'])
+def return_ranked_meals_db_location_score():
+    """
+    Get the client's choice and the meals dataframe, scales the df and
+    """
+    dict_of_location = request.get_json()['location']
+    sql = f"select * from Dish_Nutritional_values where ((Latitude-{dict_of_location['Latitude']})*(Latitude-{dict_of_location['Latitude']})+(Longitude-{dict_of_location['Longitude']})*(Longitude-{dict_of_location['Longitude']}))<({dict_of_location['Radius']}*{dict_of_location['Radius']})"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    df = pd.DataFrame(result).iloc[:, 1:]
+    dict_of_nutrients = request.get_json()['input']
+    # SCALING of df
+    dg = df[list(dict_of_nutrients.keys())]
+    st = StandardScaler()
+    # dg = df.drop('brand_name', axis=1)
+    st.fit(dg)
+    dg = pd.DataFrame(st.transform(dg), columns=dg.columns)
+
+    client_vals = np.array(list(dict_of_nutrients.values())).reshape(1, -1)
+    client_vals = st.transform(client_vals)
+
+    dists = euclidean_distances(client_vals, dg)[0]
+    max = np.max(dists)
+    # min = np.min(dists)
+    scores = np.array(list(map(lambda x: np.round((max - x) / (max), 4), dists)))
+
+    ind = df.index[scores.argsort()[::-1]]
+    print(ind)
+    sorted_meals = df.loc[ind]
+
+    sorted_meals['scores'] = sorted(scores)[::-1]
+    sorted_meals['distance'] = ((sorted_meals.Latitude-dict_of_location['Latitude'])**2+(sorted_meals.Longitude-dict_of_location['Longitude'])**2)**0.5
+    return sorted_df_to_json_db_score(sorted_meals)
 
 if __name__ == '__main__':
     # with open('churn_model.pkl', 'rb') as file:
