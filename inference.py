@@ -34,8 +34,8 @@ def sorted_df_to_json_db(sorted_df):
     for i in range(sorted_df.shape[0]):
         print(i)
         final_dict[i] = {}
-        final_dict[i]['Restaurant_name'] = sorted_df['Restaurant_name'].iloc[i]
-        final_dict[i]['name'] = sorted_df['name'].iloc[i]
+        final_dict[i]['Restaurant_name'] = sorted_df['Restaurant_name'][i]
+        final_dict[i]['name'] = sorted_df['name'][i]
 
     return final_dict
 
