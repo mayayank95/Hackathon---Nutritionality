@@ -34,8 +34,8 @@ def sorted_df_to_json_db(sorted_df):
     for i in range(sorted_df.shape[0]):
         print(i)
         final_dict[i] = {}
-        final_dict[i]['Restaurant_name'] = sorted_df['Restaurant_name'][i]
-        final_dict[i]['name'] = sorted_df['name'][i]
+        final_dict[i]['Restaurant_name'] = sorted_df['Restaurant_name'].iloc[i]
+        final_dict[i]['name'] = sorted_df['name'].iloc[i]
 
     return final_dict
 
@@ -69,6 +69,7 @@ def return_ranked_meals():
     ind = df.index[euclidean_distances(client_vals, dg).argsort()[0]]
     sorted_meals = df.loc[ind]
     return sorted_df_to_json(sorted_meals) #.reset_index().iloc[:, :2]
+
 @app.route('/predict_db', methods=['POST'])
 def return_ranked_meals_db():
     """
